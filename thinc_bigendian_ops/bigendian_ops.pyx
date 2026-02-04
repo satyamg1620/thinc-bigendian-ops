@@ -3,6 +3,7 @@ cimport numpy as np
 
 from libc.stdint cimport uint32_t, uint64_t
 from typing import Optional
+import sys
 import numpy
 from thinc.api import NumpyOps
 from thinc.config import registry
@@ -33,6 +34,7 @@ class BigEndianOps(NumpyOps):
             out = self.xp.array(data)
         
         if out.dtype.byteorder == "<":
-            return out.byteswap().view(dtype.newbyteorder())
+            target_dtype = out.dtype.newbyteorder(sys.byteorder[0])
+            return out.byteswap().view(target_dtype)
         else:
             return out
